@@ -1,4 +1,6 @@
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { request } from "@octokit/request";
 import invariant from "tiny-invariant";
 
@@ -23,45 +25,18 @@ export type DiffResponse = {
   };
 };
 
-const RESPONSE = `diff --git a/examples/indentation.md b/examples/indentation.md
-index be38532..c8c04c0 100644
---- a/examples/indentation.md
-+++ b/examples/indentation.md
-@@ -1,6 +1,6 @@
- # This is a title
- 
- This is list
--* First
--* Second
--* Third
-+    * First
-+    * Second
-+    * Third
-diff --git a/examples/indentation.tsx b/examples/indentation.tsx
-index e451547..7f01b2e 100644
---- a/examples/indentation.tsx
-+++ b/examples/indentation.tsx
-@@ -1,7 +1,9 @@
- function Component() {
-   return (
-     <div>
--      <h1>Title</h1>
-+      <header>
-+        <h1>Title</h1>
-+      </header>
-     </div>
-   );
- }
-`;
+const CACHE_PATH = path.resolve(".cache", "diff.cache.txt");
 
 export async function getDiff(
   owner: string,
   repo: string,
   pull: string
 ): Promise<string> {
-  if (1 === 1) {
-    return RESPONSE;
-  }
+  try {
+    const cache = fs.readFileSync(CACHE_PATH, "utf8");
+    console.log("getting from cache");
+    return cache;
+  } catch (e) {}
 
   invariant(GH_TOKEN, "Missing env variable: GH_TOKEN");
 
@@ -79,6 +54,10 @@ export async function getDiff(
   if (!data) {
     throw new Error("Unable to get a response");
   }
+
+  try {
+    fs.writeFileSync(CACHE_PATH, data, "utf8");
+  } catch (e) {}
 
   return data;
 }
