@@ -4,6 +4,7 @@ import {
   type MetaFunction,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { twMerge } from "tailwind-merge";
 import invariant from "tiny-invariant";
 import { DiffLine, getDiff, parseDiff } from "~/services/diff.server";
 
@@ -30,32 +31,30 @@ export default function Index() {
   const { raw, parsed } = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      <h1>rlabs / betterdiff</h1>
-      <h3>Raw</h3>
-      <pre
-        style={{
-          padding: "0.5rem",
-          border: "1px solid black",
-        }}
-      >
-        {raw}
-      </pre>
+    <div className="p-3">
+      <header className="border-b mb-3">
+        <h1 className="font-bold">rlabs / betterdiff</h1>
+      </header>
+      <details>
+        <summary className="font-bold text-xl cursor-pointer">Raw</summary>
+        <pre
+          style={{
+            padding: "0.5rem",
+            border: "1px solid black",
+          }}
+        >
+          {raw}
+        </pre>
+      </details>
       {parsed.map((diff) => {
         return (
-          <div key={diff.filename}>
-            <h3>{diff.filename}</h3>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
-              }}
-            >
+          <details key={diff.filename} open>
+            <summary className="font-bold text-xl">{diff.filename}</summary>
+            <div className="grid grid-cols-2 gap-4">
               <DiffContent lines={diff.contents.from} />
               <DiffContent lines={diff.contents.to} />
             </div>
-          </div>
+          </details>
         );
       })}
     </div>
@@ -75,32 +74,23 @@ function DiffContent({ lines }: { lines: DiffLine[] }) {
   }
 
   return (
-    <div
-      style={{
-        border: "1px solid black",
-      }}
-    >
+    <div className="border">
       {lines.map((line, idx) => {
         let lineNumber = lineNumbers[idx];
         return (
           <div
             key={line.id}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "2rem 1fr",
-              gap: "0.5rem",
-            }}
+            className={twMerge(
+              "grid grid-cols-[2rem_1fr] gap-2",
+              line.type === "removed" && "bg-red-200",
+              line.type === "added" && "bg-green-200",
+              line.type === "empty" && "bg-neutral-200"
+            )}
           >
-            <div
-              style={{
-                textAlign: "end",
-                padding: "0 .25rem",
-                borderRight: "1px solid black",
-              }}
-            >
+            <div className="text-end px-1 border-r">
               {line.type === "empty" ? <>&nbsp;</> : lineNumber}
             </div>
-            <pre style={{ margin: 0 }}>{line.content}</pre>
+            <pre>{line.content}</pre>
           </div>
         );
       })}
