@@ -1,0 +1,50 @@
+From bbe85c87111d76a72d53910ef1a52469cb9cac1b Mon Sep 17 00:00:00 2001
+From: Igor Ribeiro <igor.ribeiro.plus@gmail.com>
+Date: Thu, 8 Feb 2024 11:17:49 -0300
+Subject: [PATCH 1/2] chore: update examples to create a pull request
+
+---
+ examples/indentation.md | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/examples/indentation.md b/examples/indentation.md
+index be38532..c8c04c0 100644
+--- a/examples/indentation.md
++++ b/examples/indentation.md
+@@ -1,6 +1,6 @@
+ # This is a title
+ 
+ This is list
+-* First
+-* Second
+-* Third
++    * First
++    * Second
++    * Third
+
+From 6b92469200d4ad5d75949bd90ec7bd674894894c Mon Sep 17 00:00:00 2001
+From: Igor Ribeiro <igor.ribeiro.plus@gmail.com>
+Date: Thu, 8 Feb 2024 12:23:11 -0300
+Subject: [PATCH 2/2] chore: update .tsx to generate diff
+
+---
+ examples/indentation.tsx | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/examples/indentation.tsx b/examples/indentation.tsx
+index d1d4680..79fc168 100644
+--- a/examples/indentation.tsx
++++ b/examples/indentation.tsx
+@@ -1,8 +1,10 @@
+ function Component() {
+   return (
+     <div>
+-      <h1>Title</h1>
+-      <p>This is the content</p>
++      <header>
++        <h1>Title</h1>
++      </header>
++      <p id="content">This is the content</p>
+     </div>
+   );
+ }

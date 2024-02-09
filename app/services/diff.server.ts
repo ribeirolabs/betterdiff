@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { request } from "@octokit/request";
 import invariant from "tiny-invariant";
+import { DiffParser } from "./diffParser.server";
+import { parse } from "./parser.server";
 
 const { GH_TOKEN } = process.env;
 
@@ -61,8 +63,18 @@ export async function getDiff(
 
   return data;
 }
+export function parseDiff(diff: string) {
+  return parse();
+}
 
-export function parseDiff(diff: string): DiffResponse[] {
+export function _parseDiff(diff: string) {
+  const parser = new DiffParser(diff);
+  parser.parse();
+
+  return parser.files;
+}
+
+function old(diff: string) {
   const diffs: DiffResponse[] = [];
   let filename: string = "";
   let range: { from: number[]; to: number[] } = {

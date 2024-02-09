@@ -6,4 +6,9 @@
   pre {
     font-size: 14px;
   }
+
+  summary {
+    cursor: pointer;
+    user-select: none;
+  }
 }
