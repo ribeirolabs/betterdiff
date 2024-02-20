@@ -27,13 +27,16 @@ export type DiffResponse = {
   };
 };
 
-const CACHE_PATH = path.resolve(".cache", "diff.cache.txt");
-
 export async function getDiff(
   owner: string,
   repo: string,
   pull: string
 ): Promise<string> {
+  const CACHE_PATH = path.resolve(
+    ".cache",
+    `${[owner, repo, pull].join("_")}.cache.txt`
+  );
+
   try {
     const cache = fs.readFileSync(CACHE_PATH, "utf8");
     console.log("getting from cache");
